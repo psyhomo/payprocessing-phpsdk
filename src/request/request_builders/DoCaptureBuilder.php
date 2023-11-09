@@ -52,7 +52,7 @@ class DoCaptureBuilder extends RequestBuilder {
 			}
 		}
 
-		if ($this->pg_amount) {
+		if ($this->pg_amount ?? 0) {
 			$parameters['pg_amount'] = $this->pg_amount;
 		}
 

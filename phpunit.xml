@@ -13,5 +13,14 @@
 		<testsuite name="request">
 			<directory>tests/unit/request/</directory>
 		</testsuite>
+		<testsuite name="request-clients">
+			<directory>tests/unit/request/clients/</directory>
+		</testsuite>
+		<testsuite name="request-objects">
+			<directory>tests/unit/request/data_objects/</directory>
+		</testsuite>
+		<testsuite name="request-builders">
+			<directory>tests/unit/request/request_builders/</directory>
+		</testsuite>
 	</testsuites>
 </phpunit>

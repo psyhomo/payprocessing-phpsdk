@@ -38,7 +38,7 @@ class GetReceiptStatusTest extends IntegrationTestBase {
 		$createReceiptBuilder = new ReceiptBuilder(ReceiptBuilder::TRANSACTION_TYPE, $paymentId);
 		$createReceiptBuilder->addItem($item);
 		$createReceiptResponse = $this->postClient->request($createReceiptBuilder);
-		$this->receiptId = $createReceiptResponse->pg_receipt_id;
+		$this->receiptId = (integer)$createReceiptResponse->pg_receipt_id;
 	}
 
 

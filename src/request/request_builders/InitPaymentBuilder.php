@@ -47,8 +47,8 @@ class InitPaymentBuilder extends RequestBuilder {
 	/** @var boolean Стартовать ли рекуррентный профиль */
 	protected bool $pg_recurring_start;
 
-	/** @var string Заранее выбранная платежная система */
-	protected string $pg_payment_system;
+	/** @var string|array Заранее выбранная платежная система */
+	protected string|array $pg_payment_system;
 
 	/** @var string Check url */
 	protected string $pg_check_url;

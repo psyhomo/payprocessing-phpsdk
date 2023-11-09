@@ -7,7 +7,7 @@ use SimpleXMLElement;
 class SigHelper {
 
 	/** @var string Секретное слово */
-	protected $secretKey;
+	protected string $secretKey;
 
 
 	/**
@@ -63,11 +63,11 @@ class SigHelper {
 	 * Verifies the signature in xml
 	 * @param string $signature
 	 * @param string $scriptName
-	 * @param string $xml
+	 * @param SimpleXMLElement|string $xml
 	 * @return bool
 	 * @throws \Exception
 	 */
-	public function checkXml(string $signature, string $scriptName, string $xml): bool {
+	public function checkXml(string $signature, string $scriptName, SimpleXMLElement|string $xml): bool {
 		return $signature === $this->makeXml($scriptName, $xml);
 	}
 
@@ -75,11 +75,11 @@ class SigHelper {
 	/**
 	 * Make the signature for XML
 	 * @param string $scriptName String where will be request
-	 * @param string|SimpleXMLElement $xml
+	 * @param SimpleXMLElement|string $xml
 	 * @return string
 	 * @throws \Exception
 	 */
-	public function makeXml(string $scriptName, $xml): string {
+	public function makeXml(string $scriptName, SimpleXMLElement|string $xml): string {
 		$flatParams = $this->makeFlatParamsXML($xml);
 
 		return $this->make($scriptName, $flatParams);
@@ -93,7 +93,7 @@ class SigHelper {
 	 * @return array
 	 * @throws \Exception
 	 */
-	private function makeFlatParamsXML($xml, string $parentName = ''): array {
+	private function makeFlatParamsXML(SimpleXMLElement|string $xml, string $parentName = ''): array {
 
 		if (!$xml instanceof SimpleXMLElement) {
 			$xml = new SimpleXMLElement($xml);

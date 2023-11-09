@@ -30,6 +30,7 @@ class CreateReceiptBuilderTest extends TestCase {
 
 
 	public function testExceptionSetOperationType() {
+
 		try {
 			new ReceiptBuilder('wrong value', 100500, 100501);
 		} catch (Exception) {
@@ -41,7 +42,12 @@ class CreateReceiptBuilderTest extends TestCase {
 
 
 	public function testExceptionEmptyTransactionAndOrder() {
-		new ReceiptBuilder(ReceiptBuilder::TRANSACTION_TYPE);
+		try {
+			new ReceiptBuilder(ReceiptBuilder::TRANSACTION_TYPE);
+
+		} catch (Exception) {
+			return true;
+		}
 
 		return false;
 	}

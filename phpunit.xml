@@ -4,5 +4,14 @@
 		<testsuite name="main">
 			<directory>tests</directory>
 		</testsuite>
+		<testsuite name="integration">
+			<directory>tests/integration/</directory>
+		</testsuite>
+		<testsuite name="callback">
+			<directory>tests/unit/callback/</directory>
+		</testsuite>
+		<testsuite name="request">
+			<directory>tests/unit/request/</directory>
+		</testsuite>
 	</testsuites>
 </phpunit>

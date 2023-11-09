@@ -4,8 +4,7 @@ namespace Platron\PhpSdk\request\data_objects;
 
 use Platron\PhpSdk\Exception;
 
-class Item extends BaseData
-{
+class Item extends BaseData {
 	const
 		TYPE_PRODUCT = 'product',
 		TYPE_PRODUCT_EXCISE = 'product_excise',
@@ -47,42 +46,53 @@ class Item extends BaseData
 		AGENT_TYPE_SOLICITOR = 'solicitor';
 
 	/** @var string */
-	protected $pg_label;
+	protected string $pg_label;
+
 	/** @var float */
-	protected $pg_amount;
+	protected float $pg_amount;
+
 	/** @var float */
-	protected $pg_price;
+	protected float $pg_price;
+
 	/** @var int */
-	protected $pg_quantity;
-	/** @var string */
-	protected $pg_vat;
-	/** @var string */
-	protected $pg_type = 'product';
-	/** @var string */
-	protected $pg_nomenclature_code;
-	/** @var string */
-	protected $pg_payment_type;
+	protected int $pg_quantity;
+
+	/** @var string|null */
+	protected ?string $pg_vat;
 
 	/** @var string */
-	protected $pg_agent_type;
+	protected string $pg_type = 'product';
+
 	/** @var string */
-	protected $pg_agent_name;
+	protected string $pg_nomenclature_code;
+
+	/** @var string */
+	protected string $pg_payment_type;
+
+	/** @var string */
+	protected string $pg_agent_type;
+
+	/** @var string */
+	protected string $pg_agent_name;
+
 	/** @var int */
-	protected $pg_agent_inn;
+	protected int $pg_agent_inn;
+
 	/** @var int */
-	protected $pg_agent_phone;
+	protected int $pg_agent_phone;
+
 
 	/**
 	 * @param string $label Название товара
 	 * @param float $price Цена единицы товара
 	 * @param int $quantity Количество
-	 * @param string $vat Если отсутствует - не облягается налогом. Берется из констант
-	 * @throws \Platron\PhpSdk\Exception
+	 * @param string|null $vat Если отсутствует - не облягается налогом. Берется из констант
+	 * @throws Exception
 	 */
-	public function __construct($label, $price, $quantity, $vat = null)
-	{
+	public function __construct(string $label, float $price, int $quantity, string $vat = null) {
+
 		if (!is_null($vat) && !in_array($vat, $this->getVatTypes())) {
-			throw new \Platron\PhpSdk\Exception('Wrong vat. Use from constant');
+			throw new Exception('Wrong vat. Use from constant');
 		}
 
 		$this->pg_label = $label;
@@ -91,51 +101,53 @@ class Item extends BaseData
 		$this->pg_vat = $vat;
 	}
 
+
 	/**
 	 * Добавить сумму к позиции. Не обязательно. Если сумма меньше количества * стоимость воспринимается как скидка
 	 * @param float $amount
 	 */
-	public function addAmount($amount)
-	{
+	public function addAmount(float $amount): void {
 		$this->pg_amount = $amount;
 	}
+
 
 	/**
 	 * Добавить тип товара
 	 * @param string $type
 	 * @throws Exception
 	 */
-	public function addType($type)
-	{
+	public function addType(string $type): void {
 		if (!in_array($type, $this->getTypes())) {
-			throw new \Platron\PhpSdk\Exception('Wrong type. Use type from constant');
+			throw new Exception('Wrong type. Use type from constant');
 		}
 
 		$this->pg_type = $type;
 	}
 
+
 	/**
 	 * Добавить маркировку товара
 	 * @param string $nomenclatureCode
 	 */
-	public function addNomenclatureCode($nomenclatureCode)
-	{
+	public function addNomenclatureCode(string $nomenclatureCode): void {
 		$this->pg_nomenclature_code = $nomenclatureCode;
 	}
+
 
 	/**
 	 * Добавить тип товара
 	 * @param string $type
 	 * @throws Exception
 	 */
-	public function addPaymentType($type)
-	{
+	public function addPaymentType(string $type): void {
+
 		if (!in_array($type, $this->getPaymentTypes())) {
-			throw new \Platron\PhpSdk\Exception('Wrong payment type. Use payment type from constant');
+			throw new Exception('Wrong payment type. Use payment type from constant');
 		}
 
 		$this->pg_payment_type = $type;
 	}
+
 
 	/**
 	 * @param string $type
@@ -144,10 +156,10 @@ class Item extends BaseData
 	 * @param int $phone
 	 * @throws Exception
 	 */
-	public function addAgent($type, $name, $inn, $phone)
-	{
+	public function addAgent(string $type, string $name, int $inn, int $phone): void {
+
 		if (!in_array($type, $this->getAgentTypes())) {
-			throw new \Platron\PhpSdk\Exception('Wrong agent type. Use agent type from constant');
+			throw new Exception('Wrong agent type. Use agent type from constant');
 		}
 
 		$this->pg_agent_type = $type;
@@ -156,26 +168,27 @@ class Item extends BaseData
 		$this->pg_agent_phone = $phone;
 	}
 
+
 	/**
 	 * Получить возможные варианты НДС
 	 * @return array
 	 */
-	private function getVatTypes()
-	{
-		return array(
+	private function getVatTypes(): array {
+		return [
 			self::VAT0,
 			self::VAT10,
 			self::VAT110,
 			self::VAT120,
 			self::VAT20,
-		);
+		];
 	}
+
 
 	/**
 	 * @return array
 	 */
-	private function getTypes(){
-		return array(
+	private function getTypes(): array {
+		return [
 			self::TYPE_PRODUCT,
 			self::TYPE_PRODUCT_EXCISE,
 			self::TYPE_WORK,
@@ -188,16 +201,16 @@ class Item extends BaseData
 			self::TYPE_PAYMENT,
 			self::TYPE_COMMISSION,
 			self::TYPE_COMPOSITE,
-			self::TYPE_OTHER
-		);
+			self::TYPE_OTHER,
+		];
 	}
+
 
 	/**
 	 * @return array
 	 */
-	private function getPaymentTypes()
-	{
-		return array(
+	private function getPaymentTypes(): array {
+		return [
 			self::PAYMENT_FULL_PAYMENT,
 			self::PAYMENT_PRE_PAYMENT_FULL,
 			self::PAYMENT_PRE_PAYMENT_PART,
@@ -205,15 +218,15 @@ class Item extends BaseData
 			self::PAYMENT_CREDIT_PART,
 			self::PAYMENT_CREDIT_PAY,
 			self::PAYMENT_CREDIT,
-		);
+		];
 	}
+
 
 	/**
 	 * @return array
 	 */
-	private function getAgentTypes()
-	{
-		return array(
+	private function getAgentTypes(): array {
+		return [
 			self::AGENT_TYPE_COMMISSIONAIRE,
 			self::AGENT_TYPE_BANK_PAYMENT_AGENT,
 			self::AGENT_TYPE_BANK_PAYMENT_SUBAGENT,
@@ -221,6 +234,6 @@ class Item extends BaseData
 			self::AGENT_TYPE_PAYMENT_SUBAGENT,
 			self::AGENT_TYPE_AGENT,
 			self::AGENT_TYPE_SOLICITOR,
-		);
+		];
 	}
 }

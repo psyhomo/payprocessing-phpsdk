@@ -2,14 +2,13 @@
 
 namespace Platron\PhpSdk\tests\unit;
 
+use PHPUnit\Framework\TestCase;
 use Platron\PhpSdk\request\request_builders\CreateMoneybackBuilder;
 
-class CreateMoneybackBuilderTest extends \PHPUnit_Framework_TestCase
-{
+class CreateMoneybackBuilderTest extends TestCase {
 
-	public function testExecute()
-	{
-		$requestBuilder = new CreateMoneybackBuilder('346536', 'YANDEXMONEY_O', '10.00', 'test', array('destination_account' => '3454353453543'));
+	public function testExecute() {
+		$requestBuilder = new CreateMoneybackBuilder('346536', 'YANDEXMONEY_O', '10.00', 'test', ['destination_account' => '3454353453543']);
 		$requestBuilder->bindToTransaction('3453523');
 		$requestBuilderParameters = $requestBuilder->getParameters();
 

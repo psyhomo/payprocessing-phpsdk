@@ -2,21 +2,25 @@
 
 namespace Platron\PhpSdk\tests\integration;
 
+use Platron\PhpSdk\Exception;
 use Platron\PhpSdk\request\clients\PostClient;
+use Platron\PhpSdk\request\data_objects\Item;
 use Platron\PhpSdk\request\request_builders\InitPaymentBuilder;
 use Platron\PhpSdk\request\request_builders\ReceiptBuilder;
-use Platron\PhpSdk\request\data_objects\Item;
 
-class CreateReceiptTest extends IntegrationTestBase
-{
+class CreateReceiptTest extends IntegrationTestBase {
+
 	/** @var int */
-	protected $paymentId;
+	protected int $paymentId;
 
 	/** @var PostClient */
-	protected $postClient;
+	protected PostClient $postClient;
 
-	public function setUp()
-	{
+
+	/**
+	 * @throws Exception
+	 */
+	public function setUp(): void {
 		parent::setUp();
 
 		$postClient = new PostClient($this->merchantId, $this->secretKey);
@@ -27,8 +31,11 @@ class CreateReceiptTest extends IntegrationTestBase
 		$this->paymentId = (int)$postClient->request($initPaymentBuilder)->pg_payment_id;
 	}
 
-	public function testCreateReceipt()
-	{
+
+	/**
+	 * @throws Exception
+	 */
+	public function testCreateReceipt() {
 		$item = new Item('Test product', 10.00, 1);
 		$item->addAmount(10.00);
 		$item->addType(Item::TYPE_WORK);

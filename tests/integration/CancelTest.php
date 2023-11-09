@@ -2,23 +2,27 @@
 
 namespace Platron\PhpSdk\tests\integration;
 
+use Platron\PhpSdk\Exception;
 use Platron\PhpSdk\request\clients\PostClient;
-use Platron\PhpSdk\request\request_builders\InitPaymentBuilder;
 use Platron\PhpSdk\request\request_builders\CancelBuilder;
+use Platron\PhpSdk\request\request_builders\InitPaymentBuilder;
 
 /**
  * Интеграционный тест отмены транзакции
  */
-class CancelTest extends IntegrationTestBase
-{
+class CancelTest extends IntegrationTestBase {
+
 	/** @var int */
-	protected $paymentId;
+	protected int $paymentId;
 
 	/** @var PostClient */
-	protected $postClient;
+	protected PostClient $postClient;
 
-	public function setUp()
-	{
+
+	/**
+	 * @throws Exception
+	 */
+	public function setUp(): void {
 		parent::setUp();
 
 		$postClient = new PostClient($this->merchantId, $this->secretKey);
@@ -28,8 +32,11 @@ class CancelTest extends IntegrationTestBase
 		$this->paymentId = (int)$postClient->request($initPaymentBuilder)->pg_payment_id;
 	}
 
-	public function testCancel()
-	{
+
+	/**
+	 * @throws Exception
+	 */
+	public function testCancel() {
 		$getStatusBuilder = new CancelBuilder($this->paymentId);
 		$getStatusResponse = $this->postClient->request($getStatusBuilder);
 		$this->assertEquals('ok', $getStatusResponse->pg_status);

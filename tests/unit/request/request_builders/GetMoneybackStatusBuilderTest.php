@@ -2,12 +2,12 @@
 
 namespace Platron\PhpSdk\tests\unit;
 
+use PHPUnit\Framework\TestCase;
 use Platron\PhpSdk\request\request_builders\GetMoneybackStatusBulder;
 
-class GetMoneybackStatusBuilderTest extends \PHPUnit_Framework_TestCase
-{
-	public function testExecute()
-	{
+class GetMoneybackStatusBuilderTest extends TestCase {
+
+	public function testExecute() {
 		$requestBuilder = new GetMoneybackStatusBulder('3344');
 		$requestBuilderParameters = $requestBuilder->getParameters();
 

@@ -2,12 +2,12 @@
 
 namespace Platron\PhpSdk\tests\unit;
 
+use PHPUnit\Framework\TestCase;
 use Platron\PhpSdk\request\request_builders\CreateRefundRequestBuilder;
 
-class CreateRefundRequestBuilderTest extends \PHPUnit_Framework_TestCase
-{
-	public function testExecute()
-	{
+class CreateRefundRequestBuilderTest extends TestCase {
+
+	public function testExecute() {
 		$requestBuilder = new CreateRefundRequestBuilder('34324324', '10.00', 'test');
 		$requestBuilderParameters = $requestBuilder->getParameters();
 

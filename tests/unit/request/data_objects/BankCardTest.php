@@ -2,12 +2,12 @@
 
 namespace Platron\PhpSdk\tests\unit;
 
+use PHPUnit\Framework\TestCase;
 use Platron\PhpSdk\request\data_objects\BankCard;
 
-class BankCardTest extends \PHPUnit_Framework_TestCase
-{
-	public function testGetParameters()
-	{
+class BankCardTest extends TestCase {
+
+	public function testGetParameters() {
 		$dataObjects = new BankCard('4256000000000003', 'alexey lashnev', '2020', '01', '777', '62.213.64.221');
 
 		$returnParameters = $dataObjects->getParameters();
@@ -18,4 +18,5 @@ class BankCardTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('777', $returnParameters['pg_cvv2']);
 		$this->assertEquals('62.213.64.221', $returnParameters['pg_user_ip']);
 	}
+
 }

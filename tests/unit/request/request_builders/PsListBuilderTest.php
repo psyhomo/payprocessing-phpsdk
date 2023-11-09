@@ -2,12 +2,12 @@
 
 namespace Platron\PhpSdk\tests\unit;
 
+use PHPUnit\Framework\TestCase;
 use Platron\PhpSdk\request\request_builders\PsListBuilder;
 
-class PsListBuilderTest extends \PHPUnit_Framework_TestCase
-{
-	public function testExecute()
-	{
+class PsListBuilderTest extends TestCase {
+
+	public function testExecute() {
 		$requestBuilder = new PsListBuilder('10.00');
 		$requestBuilder->addCurrency('RUB');
 		$requestBuilder->addTestingMode();

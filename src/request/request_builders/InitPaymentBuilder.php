@@ -2,144 +2,144 @@
 
 namespace Platron\PhpSdk\request\request_builders;
 
+use Platron\PhpSdk\Exception;
 use Platron\PhpSdk\request\data_objects\AviaGds;
 use Platron\PhpSdk\request\data_objects\BankCard;
-use Platron\PhpSdk\Exception;
 
 /**
  * Строитель для создании транзакции
  */
-class InitPaymentBuilder extends RequestBuilder
-{
+class InitPaymentBuilder extends RequestBuilder {
 
 	/** @var string Для статистики использования SDK */
-	protected $sdk = 'phpsdk';
+	protected string $sdk = 'phpsdk';
 
 	/** @var float Сумма транзакции */
-	protected $pg_amount;
+	protected float $pg_amount;
 
 	/** @var string Описание транзакции */
-	protected $pg_description;
+	protected string $pg_description;
 
 	/** @var BankCard Данные банковской карты */
-	protected $bankCard;
+	protected BankCard $bankCard;
 
 	/** @var AviaGds Данные по GDS */
-	protected $aviaGds;
+	protected AviaGds $aviaGds;
 
 	/** @var string Номер заказа в магазине */
-	protected $pg_order_id;
+	protected string $pg_order_id;
 
 	/** @var string Валюта транзакции */
-	protected $pg_currency;
+	protected string $pg_currency;
 
 	/** @var int Время жизни счета транзакции */
-	protected $pg_lifetime;
+	protected int $pg_lifetime;
 
 	/** @var boolean Отлиженный платеж */
-	protected $pg_postpone;
+	protected bool $pg_postpone;
 
 	/** @var string Язык транзакции */
-	protected $pg_language;
+	protected string $pg_language;
 
 	/** @var boolean Установлен ли демо режим */
-	protected $pg_testing_mode;
+	protected bool $pg_testing_mode;
 
 	/** @var boolean Стартовать ли рекуррентный профиль */
-	protected $pg_recurring_start;
+	protected bool $pg_recurring_start;
 
 	/** @var string Заранее выбранная платежная система */
-	protected $pg_payment_system;
+	protected string $pg_payment_system;
 
 	/** @var string Check url */
-	protected $pg_check_url;
+	protected string $pg_check_url;
 
 	/** @var string Result url */
-	protected $pg_result_url;
+	protected string $pg_result_url;
 
 	/** @var string Refund url */
-	protected $pg_refund_url;
+	protected string $pg_refund_url;
 
 	/** @var string Capture url */
-	protected $pg_capture_url;
+	protected string $pg_capture_url;
 
 	/** @var string Request method */
-	protected $pg_request_method;
+	protected string $pg_request_method;
 
 	/** @var string Success url */
-	protected $pg_success_url;
+	protected string $pg_success_url;
 
 	/** @var string Success url method */
-	protected $pg_success_url_method;
+	protected string $pg_success_url_method;
 
 	/** @var string State url */
-	protected $pg_state_url;
+	protected string $pg_state_url;
 
 	/** @var string State url method */
-	protected $pg_state_url_method;
+	protected string $pg_state_url_method;
 
 	/** @var string Failure url */
-	protected $pg_failure_url;
+	protected string $pg_failure_url;
 
 	/** @var string Failure url method */
-	protected $pg_failure_url_method;
+	protected string $pg_failure_url_method;
 
 	/** @var string Site url */
-	protected $pg_site_url;
+	protected string $pg_site_url;
 
 	/** @var string IP клиента в формате long */
-	protected $pg_user_ip;
+	protected string $pg_user_ip;
 
 	/** @var string Email клиента */
-	protected $pg_user_contact_email;
+	protected string $pg_user_contact_email;
 
 	/** @var string Телефон клиента */
-	protected $pg_user_phone;
+	protected string $pg_user_phone;
+
+
+	/**
+	 * @param float $amount Сумма транзакции
+	 * @param string $description Описание транзакции
+	 */
+	public function __construct(float $amount, string $description) {
+		$this->pg_amount = $amount;
+		$this->pg_description = $description;
+	}
+
 
 	/**
 	 * @inheritdoc
 	 */
-	public function getRequestUrl()
-	{
+	public function getRequestUrl(): string {
 		return self::PLATRON_URL . 'init_payment.php';
 	}
 
+
 	/**
 	 * @inheritdoc
 	 */
-	public function getParameters()
-	{
-		$filledvars = array();
+	public function getParameters(): array {
+		$filledvars = [];
 		foreach (get_object_vars($this) as $name => $value) {
-			if ($value !== null && !in_array($name, array('bankCard', 'aviaGds'))) {
-				$filledvars[$name] = (string)$value;
+			if ($value !== null && !in_array($name, ['bankCard', 'aviaGds'])) {
+				$filledvars[ $name ] = (string)$value;
 			}
 		}
 
 		if (!empty($this->aviaGds)) {
 			foreach ($this->aviaGds->getParameters() as $name => $value) {
-				$filledvars[$name] = (string)$value;
+				$filledvars[ $name ] = (string)$value;
 			}
 		}
 
 		if (!empty($this->bankCard)) {
 			foreach ($this->bankCard->getParameters() as $name => $value) {
-				$filledvars[$name] = (string)$value;
+				$filledvars[ $name ] = (string)$value;
 			}
 		}
 
 		return $filledvars;
 	}
 
-	/**
-	 * @param float $amount Сумма транзакции
-	 * @param string $description Описание транзакции
-	 */
-	public function __construct($amount, $description)
-	{
-		$this->pg_amount = $amount;
-		$this->pg_description = $description;
-	}
 
 	/**
 	 * Уставновить банковскую карту
@@ -147,271 +147,297 @@ class InitPaymentBuilder extends RequestBuilder
 	 * @param BankCard $bankCard
 	 * @return $this
 	 */
-	public function addBankCard(BankCard $bankCard)
-	{
+	public function addBankCard(BankCard $bankCard): self {
 		$this->bankCard = $bankCard;
+
 		return $this;
 	}
+
 
 	/**
 	 * Установить GDS данные. Используется после согласования с менеджером
 	 * @param AviaGds $aviaGds
 	 * @return $this
 	 */
-	public function addGds(AviaGds $aviaGds)
-	{
+	public function addGds(AviaGds $aviaGds): self {
 		$this->aviaGds = $aviaGds;
+
 		return $this;
 	}
 
+
 	/**
 	 * Установить в тарнзакцию платежную систему
-	 * @param string $paymentSystem
+	 * @param string|string[] $paymentSystem
 	 * @return $this
 	 */
-	public function addPaymentSystem($paymentSystem)
-	{
+	public function addPaymentSystem(array|string $paymentSystem): self {
+
 		$this->pg_payment_system = $paymentSystem;
+
 		return $this;
 	}
+
 
 	/**
 	 * Добавить номер заказа магазина
 	 * @param string $order
 	 * @return $this
 	 */
-	public function addOrderId($order)
-	{
+	public function addOrderId(string $order): self {
 		$this->pg_order_id = $order;
+
 		return $this;
 	}
+
 
 	/**
 	 * Добавить валюту транзакции
 	 * @param string $currency
 	 * @return $this
 	 */
-	public function addCurrency($currency)
-	{
+	public function addCurrency(string $currency): self {
 		$this->pg_currency = $currency;
+
 		return $this;
 	}
+
 
 	/**
 	 * Установить время жизни транзакции
 	 * @param int $lifetime
 	 * @return $this
 	 */
-	public function addLifetime($lifetime)
-	{
+	public function addLifetime(int $lifetime): self {
 		$this->pg_lifetime = $lifetime;
+
 		return $this;
 	}
+
 
 	/**
 	 * Установить транзакцию как отложенную
 	 * @return $this
 	 */
-	public function addPostpone()
-	{
+	public function addPostpone(): self {
 		$this->pg_postpone = 1;
+
 		return $this;
 	}
+
 
 	/**
 	 * Установить язык транзакции
 	 * @return $this
 	 */
-	public function addLanguageEn()
-	{
+	public function addLanguageEn(): self {
 		$this->pg_language = 'en';
+
 		return $this;
 	}
+
 
 	/**
 	 * Установить демо режим транзакции
 	 * @return $this
 	 */
-	public function addTestingMode()
-	{
+	public function addTestingMode(): self {
 		$this->pg_testing_mode = 1;
+
 		return $this;
 	}
+
 
 	/**
 	 * Установить старт рекуррентной транзакции. Необходимо согласование с магазином
 	 * @return $this
 	 */
-	public function addRecurringStart()
-	{
+	public function addRecurringStart(): self {
 		$this->pg_recurring_start = 1;
+
 		return $this;
 	}
+
 
 	/**
 	 * Добавить check url
 	 * @param string $url
 	 * @return $this
 	 */
-	public function addCheckUrl($url)
-	{
+	public function addCheckUrl(string $url): self {
 		$this->pg_check_url = $url;
+
 		return $this;
 	}
+
 
 	/**
 	 * Добавить result url
 	 * @param string $url
 	 * @return $this
 	 */
-	public function addResultUrl($url)
-	{
+	public function addResultUrl(string $url): self {
 		$this->pg_result_url = $url;
+
 		return $this;
 	}
+
 
 	/**
 	 * Добавить refund url
 	 * @param string $url
 	 * @return $this
 	 */
-	public function addRefundUrl($url)
-	{
+	public function addRefundUrl(string $url): self {
 		$this->pg_refund_url = $url;
+
 		return $this;
 	}
+
 
 	/**
 	 * Добавить capture url
 	 * @param string $url
 	 * @return $this
 	 */
-	public function addCaptureUrl($url)
-	{
+	public function addCaptureUrl(string $url): self {
 		$this->pg_capture_url = $url;
+
 		return $this;
 	}
+
 
 	/**
 	 * Добавить request метод
 	 * @param string $method
 	 * @return $this
 	 */
-	public function addRequestMethod($method)
-	{
+	public function addRequestMethod(string $method): self {
 		$this->pg_request_method = $method;
+
 		return $this;
 	}
+
 
 	/**
 	 * Добавить success url
 	 * @param string $url
 	 * @return $this
 	 */
-	public function addSuccessUrl($url)
-	{
+	public function addSuccessUrl(string $url): self {
 		$this->pg_success_url = $url;
+
 		return $this;
 	}
+
 
 	/**
 	 * Добавить success url method
 	 * @param string $method
 	 * @return $this
 	 */
-	public function addSuccessUrlMethod($method)
-	{
+	public function addSuccessUrlMethod(string $method): self {
 		$this->pg_success_url_method = $method;
+
 		return $this;
 	}
+
 
 	/**
 	 * Добавить state url
 	 * @param string $url
 	 * @return $this
 	 */
-	public function addStateUrl($url)
-	{
+	public function addStateUrl(string $url): self {
 		$this->pg_state_url = $url;
+
 		return $this;
 	}
+
 
 	/**
 	 * Добавить state url method
 	 * @param string $method
 	 * @return $this
 	 */
-	public function addStateUrlMethod($method)
-	{
+	public function addStateUrlMethod(string $method): self {
 		$this->pg_state_url_method = $method;
+
 		return $this;
 	}
+
 
 	/**
 	 * Добавить failure url
 	 * @param string $url
 	 * @return $this
 	 */
-	public function addFailureUrl($url)
-	{
+	public function addFailureUrl(string $url): self {
 		$this->pg_failure_url = $url;
+
 		return $this;
 	}
+
 
 	/**
 	 * Добавить failure url method
 	 * @param string $method
 	 * @return $this
 	 */
-	public function addFailureUrlMethod($method)
-	{
+	public function addFailureUrlMethod(string $method): self {
 		$this->pg_failure_url_method = $method;
+
 		return $this;
 	}
+
 
 	/**
 	 * Добавить site url
 	 * @param string $url
 	 * @return $this
 	 */
-	public function addSiteUrl($url)
-	{
+	public function addSiteUrl(string $url): self {
 		$this->pg_site_url = $url;
+
 		return $this;
 	}
+
 
 	/**
 	 * Добавить номер телефона покупателя
 	 * @param int $phone
 	 * @return $this
 	 */
-	public function addUserPhone($phone)
-	{
+	public function addUserPhone(int $phone): self {
 		$this->pg_user_phone = $phone;
+
 		return $this;
 	}
+
 
 	/**
 	 * Добавить email покупателя
 	 * @param string $email
 	 * @return $this
 	 */
-	public function addUserEmail($email)
-	{
+	public function addUserEmail(string $email): self {
 		$this->pg_user_contact_email = $email;
+
 		return $this;
 	}
+
 
 	/**
 	 * Добавить ip покупателя в формате long
 	 * @param string $ip
 	 * @return $this
 	 */
-	public function addUserIp($ip)
-	{
+	public function addUserIp(string $ip): self {
 		$this->pg_user_ip = $ip;
+
 		return $this;
 	}
+
 
 	/**
 	 * Установить произвольные поля магазина
@@ -419,16 +445,18 @@ class InitPaymentBuilder extends RequestBuilder
 	 * @return $this
 	 * @throws Exception
 	 */
-	public function addMerchantParams($parameters)
-	{
+	public function addMerchantParams(array $parameters): self {
+
 		foreach ($parameters as $name => $value) {
-			if (substr($name, 0, 3) == 'pg_') {
+			if (str_starts_with($name, 'pg_')) {
 				throw new Exception('Только параметры без pg_');
 			}
 			$this->$name = $value;
 		}
+
 		return $this;
 	}
+
 
 	/**
 	 * Установить дополнительные для ПС параметры (например, для альфаклик идентификатор в интернет банке)
@@ -436,14 +464,15 @@ class InitPaymentBuilder extends RequestBuilder
 	 * @return $this
 	 * @throws Exception
 	 */
-	public function addPsAdditionalParameters($parameters)
-	{
+	public function addPsAdditionalParameters(array $parameters): self {
+
 		foreach ($parameters as $name => $value) {
-			if (substr($name, 0, 3) !== 'pg_') {
+			if (!str_starts_with($name, 'pg_')) {
 				throw new Exception('Только параметры с pg_');
 			}
 			$this->$name = $value;
 		}
+
 		return $this;
 	}
 

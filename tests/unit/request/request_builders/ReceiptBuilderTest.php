@@ -2,13 +2,17 @@
 
 namespace Platron\PhpSdk\tests\unit\request\request_builders;
 
+use PHPUnit\Framework\TestCase;
+use Platron\PhpSdk\Exception;
 use Platron\PhpSdk\request\data_objects\Item;
 use Platron\PhpSdk\request\request_builders\ReceiptBuilder;
 
-class ReceiptBuilderTest extends \PHPUnit_Framework_TestCase
-{
-	public function testGetParameters()
-	{
+class ReceiptBuilderTest extends TestCase {
+
+	/**
+	 * @throws Exception
+	 */
+	public function testGetParameters() {
 		$pgPaymentId = '1234';
 		$orderId = '234234';
 		$itemName = 'Test product';
@@ -28,7 +32,7 @@ class ReceiptBuilderTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($orderId, $parameters['pg_order_id']);
 		$this->assertEquals($itemName, $parameters['pg_items'][0]['pg_label']);
 		$this->assertEquals(ReceiptBuilder::ADDITIONAL_PAYMENT_PREPAYMENT, $parameters['pg_additional_payment_type']);
-		$this->assertEquals($additionalPaymentAmount, $parameters['pg_additional_payment_amount']);
+		$this->assertEquals((float)$additionalPaymentAmount, (float)$parameters['pg_additional_payment_amount']);
 		$this->assertEquals($customerName, $parameters['pg_customer_name']);
 		$this->assertEquals($customerInn, $parameters['pg_customer_inn']);
 	}

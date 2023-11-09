@@ -2,15 +2,18 @@
 
 namespace Platron\PhpSdk\tests\integration;
 
-abstract class IntegrationTestBase extends \PHPUnit_Framework_TestCase
-{
-	/** @var int */
-	protected $merchantId;
-	/** @var string */
-	protected $secretKey;
+use PHPUnit\Framework\TestCase;
 
-	public function setUp()
-	{
+abstract class IntegrationTestBase extends TestCase {
+
+	/** @var int */
+	protected int $merchantId;
+
+	/** @var string */
+	protected string $secretKey;
+
+
+	public function setUp(): void {
 		$this->merchantId = MerchantSettings::MERCHANT_ID;
 		$this->secretKey = MerchantSettings::SECRET_KEY;
 	}

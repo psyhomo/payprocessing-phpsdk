@@ -2,20 +2,23 @@
 
 namespace Platron\PhpSdk\tests\unit;
 
-use Platron\PhpSdk\request\request_builders\InitPaymentBuilder;
+use PHPUnit\Framework\TestCase;
 use Platron\PhpSdk\Exception;
+use Platron\PhpSdk\request\request_builders\InitPaymentBuilder;
 
-class InitPaymentBuilderTest extends \PHPUnit_Framework_TestCase
-{
-	public function testGetParameters()
-	{
+class InitPaymentBuilderTest extends TestCase {
+
+	/**
+	 * @throws Exception
+	 */
+	public function testGetParameters() {
 		$requestBuilder = new InitPaymentBuilder('10.00', 'test');
 
-		$bankCardStub = $this->getMockBuilder('Platron\PhpSdk\request\data_objects\BankCard')->disableOriginalConstructor()->setMethods(array())->getMock();
-		$bankCardStub->expects($this->any())->method('getParameters')->willReturn(array('bank_card_parameter' => 'test'));
+		$bankCardStub = $this->getMockBuilder('Platron\PhpSdk\request\data_objects\BankCard')->disableOriginalConstructor()->setMethods([])->getMock();
+		$bankCardStub->expects($this->any())->method('getParameters')->willReturn(['bank_card_parameter' => 'test']);
 
-		$aviaGdsStub = $this->getMockBuilder('Platron\PhpSdk\request\data_objects\AviaGds')->disableOriginalConstructor()->setMethods(array())->getMock();
-		$aviaGdsStub->expects($this->any())->method('getParameters')->willReturn(array('avia_gds_parameter' => 'test'));
+		$aviaGdsStub = $this->getMockBuilder('Platron\PhpSdk\request\data_objects\AviaGds')->disableOriginalConstructor()->setMethods([])->getMock();
+		$aviaGdsStub->expects($this->any())->method('getParameters')->willReturn(['avia_gds_parameter' => 'test']);
 
 		$requestBuilder->addBankCard($bankCardStub)
 			->addCaptureUrl('www.site.ru/capture.php')
@@ -25,11 +28,11 @@ class InitPaymentBuilderTest extends \PHPUnit_Framework_TestCase
 			->addFailureUrlMethod('POST')
 			->addGds($aviaGdsStub)
 			->addLifetime(604800)
-			->addMerchantParams(array('merchant_param' => 'test'))
+			->addMerchantParams(['merchant_param' => 'test'])
 			->addOrderId('555')
 			->addPaymentSystem('RUSSIANSTANDARD')
 			->addPostpone()
-			->addPsAdditionalParameters(array('pg_alfaclick_client_id' => 111333))
+			->addPsAdditionalParameters(['pg_alfaclick_client_id' => 111333])
 			->addRecurringStart()
 			->addRefundUrl('www.site.ru/refund.php')
 			->addRequestMethod('POST')
@@ -74,26 +77,22 @@ class InitPaymentBuilderTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('79268750000', $requestBuilderParameters['pg_user_phone']);
 	}
 
-	public function testExceptionAddMerchantParams()
-	{
+
+	public function testExceptionAddMerchantParams() {
 		$requestBuilder = new InitPaymentBuilder('10.00', 'test');
 		try {
-			$requestBuilder->addMerchantParams(array('pg_some_param' => 'test'));
-		} catch (Exception $ex) {
+			$requestBuilder->addMerchantParams(['pg_some_param' => 'test']);
+		} catch (Exception) {
 			return true;
 		}
 
 		return false;
 	}
 
-	public function testExceptionAddPsAdditionalParameters()
-	{
+
+	public function testExceptionAddPsAdditionalParameters() {
 		$requestBuilder = new InitPaymentBuilder('10.00', 'test');
-		try {
-			$requestBuilder->addPaymentSystem(array('some_param' => 'test'));
-		} catch (Exception $ex) {
-			return true;
-		}
+		$requestBuilder->addPaymentSystem(['some_param' => 'test']);
 
 		return false;
 	}

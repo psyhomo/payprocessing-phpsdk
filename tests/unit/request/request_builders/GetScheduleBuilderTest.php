@@ -2,12 +2,12 @@
 
 namespace Platron\PhpSdk\tests\unit\request\request_builders;
 
+use PHPUnit\Framework\TestCase;
 use Platron\PhpSdk\request\request_builders\GetScheduleBuilder;
 
-class GetScheduleBuilderTest extends \PHPUnit_Framework_TestCase
-{
-	public function testGetParameters()
-	{
+class GetScheduleBuilderTest extends TestCase {
+
+	public function testGetParameters() {
 		$merchantId = 82;
 		$profileId = 12345;
 		$deleteBuilder = new GetScheduleBuilder($merchantId, $profileId);

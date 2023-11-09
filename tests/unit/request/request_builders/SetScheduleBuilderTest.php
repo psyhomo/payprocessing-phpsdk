@@ -2,19 +2,20 @@
 
 namespace Platron\PhpSdk\tests\unit\request\request_builders;
 
-use Platron\PhpSdk\request\data_objects\ScheduleTemplate;
+use DateTime;
+use PHPUnit\Framework\TestCase;
+use Platron\PhpSdk\Exception;
 use Platron\PhpSdk\request\request_builders\SetScheduleBuilder;
 
-class SetScheduleBuilderTest extends \PHPUnit_Framework_TestCase
-{
-	public function testGetParametersWithDates()
-	{
+class SetScheduleBuilderTest extends TestCase {
+
+	public function testGetParametersWithDates() {
 		$merchantId = '82';
 		$recurringProfile = '231231';
 		$amount = '10.00';
 
 		$templateRequest = new SetScheduleBuilder($merchantId, $recurringProfile, $amount);
-		$date = new \DateTime('2020-01-01 00:00:00');
+		$date = new DateTime('2020-01-01 00:00:00');
 		$templateRequest->addDate($date);
 		$parameters = $templateRequest->getParameters();
 		$this->assertEquals($merchantId, $parameters['pg_merchant_id']);
@@ -23,11 +24,16 @@ class SetScheduleBuilderTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($date->format('Y-m-d H:i:s'), $parameters['pg_dates'][0]);
 	}
 
-	public function testGetParametersWithTemplate()
-	{
-		$startDate = new \DateTime('2020-01-01 00:00:00');
+
+	/**
+	 * @throws Exception
+	 */
+	public function testGetParametersWithTemplate() {
+
+		$startDate = new DateTime('2020-01-01 00:00:00');
 		$period = 10;
 		$maxPeriods = 10;
+
 		$templateRequest = new SetScheduleBuilder('82', '231231', '10.00');
 		$templateRequest->addTemplate($startDate, SetScheduleBuilder::INTERVAL_WEEK, $period, $maxPeriods);
 		$parameters = $templateRequest->getParameters();

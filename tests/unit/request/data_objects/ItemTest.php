@@ -2,15 +2,16 @@
 
 namespace Platron\PhpSdk\tests\unit;
 
-use PHPUnit_Framework_TestCase;
-use Platron\PhpSdk\request\data_objects\Item;
+use PHPUnit\Framework\TestCase;
 use Platron\PhpSdk\Exception;
+use Platron\PhpSdk\request\data_objects\Item;
 
-class ItemTest extends PHPUnit_Framework_TestCase
-{
+class ItemTest extends TestCase {
 
-	public function testGetParameters()
-	{
+	/**
+	 * @throws Exception
+	 */
+	public function testGetParameters() {
 		$item = new Item('test product', '10.00', 2, Item::VAT0);
 		$item->addAmount('20.00');
 		$item->addType(Item::TYPE_WORK);
@@ -38,36 +39,35 @@ class ItemTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals($nomenclatureCode, $parameters['pg_nomenclature_code']);
 	}
 
+
 	/**
 	 * @param $productName
 	 * @param $price
 	 * @param $quantity
 	 * @param $vat
 	 * @return bool
-	 *
 	 * @return bool
 	 * @dataProvider wrongVatProvider
 	 */
-	public function testExceptionSetVat($productName, $price, $quantity, $vat)
-	{
+	public function testExceptionSetVat($productName, $price, $quantity, $vat) {
 		try {
 			new Item($productName, $price, $quantity, $vat);
-		} catch (Exception $ex) {
+		} catch (Exception) {
 			return true;
 		}
 
 		return false;
 	}
 
+
 	/**
 	 * @return array
 	 */
-	public function wrongVatProvider()
-	{
-		return array(
-			array('test product', '10.00', 2, 'wrong value'),
-			array('test product', '10.00', 2, '18'),
-			array('test product', '10.00', 2, '18/118'),
-		);
+	public function wrongVatProvider(): array {
+		return [
+			['test product', '10.00', 2, 'wrong value'],
+			['test product', '10.00', 2, '18'],
+			['test product', '10.00', 2, '18/118'],
+		];
 	}
 }

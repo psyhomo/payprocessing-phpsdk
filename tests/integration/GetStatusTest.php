@@ -2,23 +2,27 @@
 
 namespace Platron\PhpSdk\tests\integration;
 
+use Platron\PhpSdk\Exception;
 use Platron\PhpSdk\request\clients\PostClient;
-use Platron\PhpSdk\request\request_builders\InitPaymentBuilder;
 use Platron\PhpSdk\request\request_builders\GetStatusBuilder;
+use Platron\PhpSdk\request\request_builders\InitPaymentBuilder;
 
 /**
  * Интеграционный тест создания транзакции и запроса по ней статуса
  */
-class GetStatusTest extends IntegrationTestBase
-{
+class GetStatusTest extends IntegrationTestBase {
+
 	/** @var int */
-	protected $paymentId;
+	protected int $paymentId;
 
 	/** @var PostClient */
-	protected $postClient;
+	protected PostClient $postClient;
 
-	public function setUp()
-	{
+
+	/**
+	 * @throws Exception
+	 */
+	public function setUp(): void {
 		parent::setUp();
 
 		$postClient = new PostClient($this->merchantId, $this->secretKey);
@@ -28,8 +32,11 @@ class GetStatusTest extends IntegrationTestBase
 		$this->paymentId = (int)$postClient->request($initPaymentBuilder)->pg_payment_id;
 	}
 
-	public function testGetStatus()
-	{
+
+	/**
+	 * @throws Exception
+	 */
+	public function testGetStatus() {
 		$getStatusBuilder = new GetStatusBuilder($this->paymentId);
 		$getStatusResponse = $this->postClient->request($getStatusBuilder);
 		$this->assertEquals('ok', $getStatusResponse->pg_status);

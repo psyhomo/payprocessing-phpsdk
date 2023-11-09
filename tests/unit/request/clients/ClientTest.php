@@ -2,19 +2,21 @@
 
 namespace Platron\PhpSdk\tests\unit;
 
-use Platron\PhpSdk\request\clients\PostClient;
+use PHPUnit\Framework\TestCase;
 use Platron\PhpSdk\Exception;
+use Platron\PhpSdk\request\clients\PostClient;
+use Platron\PhpSdk\request\request_builders\RequestBuilder;
 
-class ClientTest extends \PHPUnit_Framework_TestCase
-{
+class ClientTest extends TestCase {
 
 	/** @var PostClient */
-	protected $fixture;
+	protected PostClient $fixture;
 
-	public function setUp()
-	{
+
+	public function setUp(): void {
 		$this->fixture = new PostClient('82', 'sdfvdfvfsdvfsd');
 	}
+
 
 	/**
 	 * @dataProvider provider
@@ -22,38 +24,39 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 	 * @param array $parameters
 	 * @return boolean
 	 */
-	public function testRequest($url, $parameters)
-	{
+	public function testRequest(string $url, array $parameters) {
 		try {
 			$requestBuilder = $this->generateMock($url, $parameters);
 			$this->fixture->request($requestBuilder);
-		} catch (Exception $e) {
+		} catch (Exception) {
 			return true;
+		} catch (\Exception) {
 		}
 
 		return false;
 	}
 
-	public function provider()
-	{
-		return array(
-			array('www.not-found-site.sdcasdasdcasdc', array(1, 2, 3)),
-			array('www.platron.ru/init_payment.php', array(1, 2, 3)),
-			array('www.google.com', array()),
-		);
+
+	public function provider(): array {
+		return [
+			['www.not-found-site.sdcasdasdcasdc', [1, 2, 3]],
+			['www.platron.ru/init_payment.php', [1, 2, 3]],
+			['www.google.com', []],
+		];
 	}
 
+
 	/**
-	 *
 	 * @param string $url
 	 * @param array $params
-	 * @return Platron\PhpSdk\request\request_builders\RequestBuilder
+	 * @return RequestBuilder
 	 */
-	private function generateMock($url, $params)
-	{
-		$stubRequestBuilder = $this->getMockBuilder('Platron\PhpSdk\request\request_builders\RequestBuilder')->disableOriginalConstructor()->setMethods(array('getParameters', 'getRequestUrl'))->getMock();
+	private function generateMock(string $url, array $params): RequestBuilder {
+		$stubRequestBuilder = $this->getMockBuilder('Platron\PhpSdk\request\request_builders\RequestBuilder')
+			->disableOriginalConstructor()->setMethods(['getParameters', 'getRequestUrl'])->getMock();
 		$stubRequestBuilder->expects($this->any())->method('getParameters')->willReturn($params);
 		$stubRequestBuilder->expects($this->any())->method('getRequestUrl')->willReturn($url);
+
 		return $stubRequestBuilder;
 	}
 }

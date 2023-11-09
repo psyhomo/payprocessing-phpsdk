@@ -2,15 +2,18 @@
 
 namespace Platron\PhpSdk\tests\unit;
 
-use Platron\PhpSdk\request\request_builders\ReceiptBuilder;
+use PHPUnit\Framework\TestCase;
 use Platron\PhpSdk\Exception;
+use Platron\PhpSdk\request\request_builders\ReceiptBuilder;
 
-class CreateReceiptBuilderTest extends \PHPUnit_Framework_TestCase
-{
-	public function testGetParameters()
-	{
-		$itemStub = $this->getMockBuilder('Platron\PhpSdk\request\data_objects\Item')->disableOriginalConstructor()->setMethods(array())->getMock();
-		$itemStub->expects($this->any())->method('getParameters')->willReturn(array('item_parameter' => 'test'));
+class CreateReceiptBuilderTest extends TestCase {
+
+	/**
+	 * @throws Exception
+	 */
+	public function testGetParameters() {
+		$itemStub = $this->getMockBuilder('Platron\PhpSdk\request\data_objects\Item')->disableOriginalConstructor()->setMethods([])->getMock();
+		$itemStub->expects($this->any())->method('getParameters')->willReturn(['item_parameter' => 'test']);
 
 		$createReceiptBuilder = new ReceiptBuilder(ReceiptBuilder::TRANSACTION_TYPE, 100500, 100501);
 		$result = $createReceiptBuilder->addItem($itemStub);
@@ -25,24 +28,20 @@ class CreateReceiptBuilderTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('test', $itemParameters['item_parameter']);
 	}
 
-	public function testExceptionSetOperationType()
-	{
+
+	public function testExceptionSetOperationType() {
 		try {
 			new ReceiptBuilder('wrong value', 100500, 100501);
-		} catch (Exception $ex) {
+		} catch (Exception) {
 			return true;
 		}
 
 		return false;
 	}
 
-	public function testExceptionEmptyTransactionAndOrder()
-	{
-		try {
-			new ReceiptBuilder(ReceiptBuilder::TRANSACTION_TYPE);
-		} catch (Exception $ex) {
-			return true;
-		}
+
+	public function testExceptionEmptyTransactionAndOrder() {
+		new ReceiptBuilder(ReceiptBuilder::TRANSACTION_TYPE);
 
 		return false;
 	}

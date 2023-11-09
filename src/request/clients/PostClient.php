@@ -6,52 +6,53 @@ use Platron\PhpSdk\Exception;
 use Platron\PhpSdk\request\request_builders\RequestBuilder;
 use Platron\PhpSdk\SigHelper;
 use Psr\Log\LoggerInterface;
-use SimpleXMLElement;
 use Psr\Log\LogLevel;
+use SimpleXMLElement;
 
-class PostClient implements iClient
-{
+class PostClient implements iClient {
 
 	/** @var string|null Описание ошибки */
-	protected $errorDescription;
+	protected ?string $errorDescription;
+
 	/** @var mixed|null Код ошибки */
-	protected $errorCode;
+	protected mixed $errorCode;
 
 	/** @var int Номер магазина */
-	protected $merchant;
+	protected int $merchant;
 
 	/** @var SigHelper Помощник создания подписи */
-	protected $sigHelper;
+	protected SigHelper $sigHelper;
 
 	/** @var string */
-	protected $secretKey;
+	protected string $secretKey;
 
-	/** @var LoggerInterface */
-	protected $logger;
+	/** @var LoggerInterface|null */
+	protected ?LoggerInterface $logger;
 
 	/** @var array */
-	protected $additionalCurlParameters = array();
+	protected array $additionalCurlParameters = [];
+
 
 	/**
 	 * @inheritdoc
-	 * @throws Exception
 	 */
-	public function __construct($merchant, $secretKey, LoggerInterface $logger = null)
-	{
+	public function __construct(int $merchant, string $secretKey, LoggerInterface $logger = null) {
 		$this->merchant = $merchant;
 		$this->sigHelper = new SigHelper($secretKey);
 		$this->secretKey = $secretKey;
 		$this->logger = $logger;
 	}
 
+
 	/**
 	 * Отправить запрос
 	 * @inheritdoc
 	 * @return SimpleXMLElement
 	 * @throws Exception
+	 * @throws \Exception
 	 */
-	public function request(RequestBuilder $requestBuilder)
-	{
+	public function request(RequestBuilder $requestBuilder): SimpleXMLElement {
+
 		$parameters = $requestBuilder->getParameters();
 		$url = $requestBuilder->getRequestUrl();
 
@@ -81,50 +82,56 @@ class PostClient implements iClient
 		curl_close($curl);
 
 		if ($this->hasError($response, $url)) {
-			throw new Exception($this->errorDescription, $this->errorCode);
+			throw new Exception($this->errorDescription, $this->errorCode ?? 0);
 		}
 
 		return new SimpleXMLElement($response);
 	}
+
+
+	/**
+	 * Добавляет дополнительные параметры к curl клиенту.
+	 * @param array $parameters
+	 */
+	public function setAdditionalCurlParameters(array $parameters): void {
+		$this->additionalCurlParameters = $parameters;
+	}
+
 
 	/**
 	 * Проверить ответ на наличие ошибок
 	 * @param string $response
 	 * @param string $url
 	 * @return boolean
+	 * @throws \Exception
 	 */
-	private function hasError($response, $url)
-	{
+	private function hasError(string $response, string $url): bool {
+
 		try {
 			$xml = new SimpleXMLElement($response);
 		} catch (\Exception $e) {
 			$this->errorCode = $e->getCode();
 			$this->errorDescription = $e->getMessage();
+
 			return true;
 		}
 
 		$sigHelper = new SigHelper($this->secretKey);
+
 		if (empty($xml->pg_sig) || !$sigHelper->checkXml($xml->pg_sig, $sigHelper->getScriptNameFromUrl($url), $xml)) {
 			$this->errorDescription = 'Not valid sig in response';
+
 			return true;
 		}
 
 		if (!empty($xml->pg_error_code)) {
 			$this->errorCode = (string)$xml->pg_error_code;
 			$this->errorDescription = (string)$xml->pg_error_description;
+
 			return true;
 		}
 
 		return false;
-	}
-
-	/**
-	 * Добавляет дополнительные параметры к curl клиенту.
-	 * @param array $parameters
-	 */
-	public function setAdditionalCurlParameters(array $parameters)
-	{
-		$this->additionalCurlParameters = $parameters;
 	}
 
 }

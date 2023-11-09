@@ -2,8 +2,7 @@
 
 namespace Platron\PhpSdk\request\data_objects;
 
-class LongRecordTripleg extends BaseData
-{
+class LongRecordTripleg extends BaseData {
 
 	/**
 	 * @param int $triplegNumber Номер шага
@@ -16,8 +15,8 @@ class LongRecordTripleg extends BaseData
 	 * @param string $basisCode Код тарифа
 	 * @param string $flightNumber Номер рейса
 	 */
-	public function __construct($triplegNumber, $date, $carrier, $class, $destFrom, $destTo, $stopOver, $basisCode, $flightNumber)
-	{
+	public function __construct(int    $triplegNumber, string $date, string $carrier, string $class, string $destFrom,
+	                            string $destTo, string $stopOver, string $basisCode, string $flightNumber) {
 		$dateParamName = 'pg_tripleg_' . $triplegNumber . '_date';
 		$this->$dateParamName = $date;
 

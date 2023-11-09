@@ -2,17 +2,22 @@
 
 namespace Platron\PhpSdk\tests\unit;
 
-use Platron\PhpSdk\request\request_builders\MakeRecurringBuilder;
+use PHPUnit\Framework\TestCase;
 use Platron\PhpSdk\Exception;
+use Platron\PhpSdk\request\request_builders\MakeRecurringBuilder;
 
-class MakeRecurringBuilderTest extends \PHPUnit_Framework_TestCase
-{
-	public function testExecute()
-	{
+class MakeRecurringBuilderTest extends TestCase {
+
+	/**
+	 * @throws Exception
+	 */
+	public function testExecute() {
+
 		$requestBuilder = new MakeRecurringBuilder('4321', 'test');
+
 		$requestBuilder->addAmount('10.00')
 			->addEncoding('UTF8')
-			->addMerchantParams(array('merchant_param' => 'test'))
+			->addMerchantParams(['merchant_param' => 'test'])
 			->addOrderId('777944')
 			->addRefundUrl('www.test.ru/refund.php')
 			->addRequestMethod('POST')
@@ -32,12 +37,14 @@ class MakeRecurringBuilderTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('www.test.ru/result.php', $requestBuilderParameters['pg_result_url']);
 	}
 
-	public function testExecuteMerchantParamsException()
-	{
+
+	public function testExecuteMerchantParamsException() {
+
 		$requestBuilder = new MakeRecurringBuilder('4321', 'test');
+
 		try {
-			$requestBuilder->addMerchantParams(array('pg_merchant_param' => 'test'));
-		} catch (Exception $ex) {
+			$requestBuilder->addMerchantParams(['pg_merchant_param' => 'test']);
+		} catch (Exception) {
 			return true;
 		}
 

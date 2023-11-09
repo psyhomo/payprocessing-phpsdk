@@ -2,22 +2,27 @@
 
 namespace Platron\PhpSdk\tests\integration;
 
+use Platron\PhpSdk\Exception;
 use Platron\PhpSdk\request\clients\PostClient;
+use Platron\PhpSdk\request\data_objects\Item;
 use Platron\PhpSdk\request\request_builders\GetReceiptStatusBuilder;
 use Platron\PhpSdk\request\request_builders\InitPaymentBuilder;
 use Platron\PhpSdk\request\request_builders\ReceiptBuilder;
-use Platron\PhpSdk\request\data_objects\Item;
+use SimpleXMLElement;
 
-class GetReceiptStatusTest extends IntegrationTestBase
-{
-	/** @var int */
-	protected $receiptId;
+class GetReceiptStatusTest extends IntegrationTestBase {
+
+	/** @var int|SimpleXMLElement */
+	protected int|SimpleXMLElement $receiptId;
 
 	/** @var PostClient */
-	protected $postClient;
+	protected PostClient $postClient;
 
-	public function setUp()
-	{
+
+	/**
+	 * @throws Exception
+	 */
+	public function setUp(): void {
 		parent::setUp();
 
 		$postClient = new PostClient($this->merchantId, $this->secretKey);
@@ -36,8 +41,11 @@ class GetReceiptStatusTest extends IntegrationTestBase
 		$this->receiptId = $createReceiptResponse->pg_receipt_id;
 	}
 
-	public function testCreateReceipt()
-	{
+
+	/**
+	 * @throws Exception
+	 */
+	public function testCreateReceipt() {
 		$getReceiptStatusBuilder = new GetReceiptStatusBuilder($this->receiptId);
 		$getStatusReceiptResponse = $this->postClient->request($getReceiptStatusBuilder);
 		$this->assertEquals('ok', $getStatusReceiptResponse->pg_status);

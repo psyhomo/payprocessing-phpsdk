@@ -2,14 +2,14 @@
 
 namespace Platron\PhpSdk\tests\unit;
 
+use PHPUnit\Framework\TestCase;
 use Platron\PhpSdk\request\data_objects\AviaGds;
 
-class AviaGdsTest extends \PHPUnit_Framework_TestCase
-{
-	public function testGetParameters()
-	{
+class AviaGdsTest extends TestCase {
+
+	public function testGetParameters() {
 		$dataObject = new AviaGds('GGG666', 'SABRE', '10.00');
-		$dataObject->addCardBrands(array('VI', 'CA'));
+		$dataObject->addCardBrands(['VI', 'CA']);
 
 		$params = $dataObject->getParameters();
 

@@ -405,10 +405,10 @@ class InitPaymentBuilder extends RequestBuilder {
 
 	/**
 	 * Добавить номер телефона покупателя
-	 * @param int $phone
+	 * @param string $phone
 	 * @return $this
 	 */
-	public function addUserPhone(int $phone): self {
+	public function addUserPhone(string $phone): self {
 		$this->pg_user_phone = $phone;
 
 		return $this;
